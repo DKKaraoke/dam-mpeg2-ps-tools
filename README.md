@@ -75,10 +75,10 @@ NOTES
 
 ## Authors
 
-- soltia48 (ソルティアよんはち)
+- soltia48
 
 ## License
 
 [MIT](https://opensource.org/licenses/MIT)
 
-Copyright (c) 2023 soltia48 (ソルティアよんはち)
+Copyright (c) 2023 soltia48
