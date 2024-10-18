@@ -1,4 +1,4 @@
-# dam_mpeg2_ps_utility
+# dam-mpeg2-ps-tools
 
 ## Summary
 
@@ -11,35 +11,60 @@ Also, DAM Karaoke machines need End of sequence (EOS) and End of stream (EOB) NA
 ### Dump
 
 ```
-$ python dump_dam_mpeg2_ps.py --help
-usage: dump_dam_mpeg2_ps.py [-h] [--print-packets] input_path
+$ dam-mpeg2-ps-tools dump --help
 
-DAM compatible MPEG2-PS Dumper
+NAME
+    dam-mpeg2-ps-tools dump - Dump
 
-positional arguments:
-  input_path       Input H.264-ES file path
+SYNOPSIS
+    dam-mpeg2-ps-tools dump INPUT <flags>
 
-options:
-  -h, --help       show this help message and exit
-  --print-packets  Print packets
+DESCRIPTION
+    Dump
+
+POSITIONAL ARGUMENTS
+    INPUT
+        Input MPEG2-PS path
+
+FLAGS
+    -p, --print_packets=PRINT_PACKETS
+        Default: False
+        Print packets. Defaults to False.
+
+NOTES
+    You can also use flags syntax for POSITIONAL ARGUMENTS
 ```
 
 ## Create
 
 ```
-$ python create_dam_mpeg2_ps.py --help
-usage: create_dam_mpeg2_ps.py [-h] [--input_codec {avc,hevc}] [--frame_rate {24000/1001,24,30000/1001,30,60000/1001,60}] input_path output_path
+$ dam-mpeg2-ps-tools create --help
 
-DAM compatible MPEG2-PS Creator
+NAME
+    dam-mpeg2-ps-tools create - Create
 
-positional arguments:
-  input_path            Input H.264-ES file path
-  output_path           DAM compatible MPEG2-PS output file path
+SYNOPSIS
+    dam-mpeg2-ps-tools create INPUT OUTPUT <flags>
 
-options:
-  -h, --help            show this help message and exit
-  --input_codec {avc,hevc}
-  --frame_rate {24000/1001,24,30000/1001,30,60000/1001,60}
+DESCRIPTION
+    Create
+
+POSITIONAL ARGUMENTS
+    INPUT
+        Input H.264-ES path
+    OUTPUT
+        Output MPEG2-PS path
+
+FLAGS
+    -c, --codec=CODEC
+        Default: 'avc'
+        Codec. Defaults to "avc".
+    -f, --frame_rate=FRAME_RATE
+        Default: '30000/1001'
+        Frame rate. Defaults to "30000/1001".
+
+NOTES
+    You can also use flags syntax for POSITIONAL ARGUMENTS
 ```
 
 ## List of verified DAM Karaoke machine

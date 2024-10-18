@@ -1,11 +1,14 @@
-from typing import NamedTuple, Union
+from dataclasses import dataclass
+from typing import Union
 
 
-class Mpeg2PsProgramEnd(NamedTuple):
+@dataclass
+class Mpeg2PsProgramEnd:
     pass
 
 
-class Mpeg2PesPacketType1(NamedTuple):
+@dataclass
+class Mpeg2PesPacketType1:
     stream_id: int
     PES_scrambling_control: int
     PES_priority: int
@@ -24,12 +27,14 @@ class Mpeg2PesPacketType1(NamedTuple):
     PES_packet_data: bytes
 
 
-class Mpeg2PesPacketType2(NamedTuple):
+@dataclass
+class Mpeg2PesPacketType2:
     stream_id: int
     PES_packet_data: bytes
 
 
-class Mpeg2PesPacketType3(NamedTuple):
+@dataclass
+class Mpeg2PesPacketType3:
     stream_id: int
     PES_packet_length: int
 
@@ -37,20 +42,23 @@ class Mpeg2PesPacketType3(NamedTuple):
 Mpeg2PesPacket = Union[Mpeg2PesPacketType1, Mpeg2PesPacketType2, Mpeg2PesPacketType3]
 
 
-class Mpeg2PsPackHeader(NamedTuple):
+@dataclass
+class Mpeg2PsPackHeader:
     system_clock_reference_base: int
     system_clock_reference_extension: int
     program_mux_rate: int
     pack_stuffing_length: int
 
 
-class Mpeg2PsSystemHeaderPStdInfo(NamedTuple):
+@dataclass
+class Mpeg2PsSystemHeaderPStdInfo:
     stream_id: int
     P_STD_buffer_bound_scale: int
     P_STD_buffer_size_bound: int
 
 
-class Mpeg2PsSystemHeader(NamedTuple):
+@dataclass
+class Mpeg2PsSystemHeader:
     rate_bound: int
     audio_bound: int
     fixed_flag: int
@@ -62,12 +70,14 @@ class Mpeg2PsSystemHeader(NamedTuple):
     P_STD_info: list[Mpeg2PsSystemHeaderPStdInfo]
 
 
-class Mpeg2GenericDescriptor(NamedTuple):
+@dataclass
+class Mpeg2GenericDescriptor:
     descriptor_tag: int
     data: bytes
 
 
-class Mpeg2AvcVideoDescriptor(NamedTuple):
+@dataclass
+class Mpeg2AvcVideoDescriptor:
     profile_idc: int
     constraint_set0_flag: int
     constraint_set1_flag: int
@@ -82,13 +92,15 @@ class Mpeg2AvcVideoDescriptor(NamedTuple):
     Frame_Packing_SEI_not_present_flag: int
 
 
-class Mpeg2AacAudioDescriptor(NamedTuple):
+@dataclass
+class Mpeg2AacAudioDescriptor:
     MPEG_2_AAC_profile: int
     MPEG_2_AAC_channel_configuration: int
     MPEG_2_AAC_additional_information: int
 
 
-class Mpeg2HevcVideoDescriptor(NamedTuple):
+@dataclass
+class Mpeg2HevcVideoDescriptor:
     profile_space: int
     tier_flag: int
     profile_idc: int
@@ -117,13 +129,15 @@ Mpeg2Descriptor = Union[
 ]
 
 
-class Mpeg2PsElementaryStreamMapEntry(NamedTuple):
+@dataclass
+class Mpeg2PsElementaryStreamMapEntry:
     stream_type: int
     elementary_stream_id: int
     elementary_stream_info: list[Mpeg2Descriptor]
 
 
-class Mpeg2PsProgramStreamMap(NamedTuple):
+@dataclass
+class Mpeg2PsProgramStreamMap:
     current_next_indicator: int
     program_stream_map_version: int
     program_stream_info: list[Mpeg2Descriptor]

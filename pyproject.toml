@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "dam-mpeg2-ps-tools"
+version = "0.1.0"
+description = "DAM MPEG2-PS Tools"
+authors = ["soltia48 <soltia48@protonmail.com>"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "dam_mpeg2_ps_tools"}]
+
+[tool.poetry.scripts]
+dam-mpeg2-ps-tools = "dam_mpeg2_ps_tools.cli:main"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+bitstring = "^4.2.3"
+fire = "^0.7.0"
+
+[tool.poetry.group.dev.dependencies]
+black = "^24.10.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
