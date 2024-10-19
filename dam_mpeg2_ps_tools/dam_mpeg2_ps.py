@@ -5,7 +5,6 @@ from typing import Literal
 
 from .bitstream import copy
 
-# from .dam_mpeg2_ps import GopIndex
 from .gop_index import GopIndexEntry, GopIndex
 from .h264_annex_b import H264NalUnit
 from .mpeg2_ps import (
