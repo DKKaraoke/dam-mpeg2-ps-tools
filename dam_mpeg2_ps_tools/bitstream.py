@@ -1,7 +1,7 @@
 from bitstring import BitStream
 
 # 256 KiB
-__BLOCK_SIZE = 1048576000000
+__BLOCK_SIZE = 262144
 
 
 def copy(source: BitStream, destination: BitStream, length: int | None = None) -> None:
