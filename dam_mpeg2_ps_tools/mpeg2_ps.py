@@ -1,4 +1,5 @@
 from bitstring import BitArray, BitStream, ReadError, pack
+import logging
 
 from .mpeg2_ps_data import (
     Mpeg2PsProgramEnd,
@@ -22,6 +23,8 @@ from .mpeg2_ps_data import (
 
 SYSTEM_CLOCK_FREQUENCY = 27000000
 PACKET_START_CODE = b"\x00\x00\x01"
+
+__logger = logging.getLogger(__name__)
 
 
 def __crc32(buffer: bytes):

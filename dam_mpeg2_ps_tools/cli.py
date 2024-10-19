@@ -2,6 +2,7 @@ from bitstring import BitStream
 from decimal import Decimal
 import fire
 from io import BufferedReader
+import logging
 
 from .dam_mpeg2_ps import write_mpeg2_ps
 from .gop_index import GopIndex
@@ -10,7 +11,24 @@ from .mpeg2_ps import read_ps_packet, Mpeg2PesPacketType2
 
 
 class Cli:
-    """DAM MPEG2-PS Tools CLI"""
+    """DAM MPEG2-PS Tools CLI
+
+    Args:
+        log_level (str, optional): Log level. Defaults to "INFO". {CRITICAL|FATAL|ERROR|WARN|WARNING|INFO|DEBUG|NOTSET}
+    """
+
+    @staticmethod
+    def __config_logger(level: str) -> None:
+        """Config logger
+
+        Args:
+            level (str): Log level
+        """
+
+        logging.basicConfig(
+            level=level,
+            format="[%(asctime)s] %(levelname)s [%(name)s.%(funcName)s:%(lineno)d] %(message)s",
+        )
 
     @staticmethod
     def __load_h264_es(stream: BufferedReader) -> list[H264NalUnit]:
@@ -33,6 +51,16 @@ class Cli:
                 continue
             nal_units.append(nal_unit)
         return nal_units
+
+    def __init__(self, log_level="INFO"):
+        """DAM MPEG2-PS Tools CLI
+
+        Args:
+            log_level (str, optional): Log level. Defaults to "INFO". {CRITICAL|FATAL|ERROR|WARN|WARNING|INFO|DEBUG|NOTSET}
+        """
+
+        Cli.__config_logger(log_level)
+        self.__logger = logging.getLogger(__name__)
 
     def dump(self, input, print_packets=False) -> None:
         """Dump
@@ -57,6 +85,7 @@ class Cli:
             while True:
                 ps_packet = read_ps_packet(stream)
                 if ps_packet is None:
+                    self.__logger.debug("No PS Packet. Maybe reached to End of Stream.")
                     break
 
                 if print_packets:
@@ -67,6 +96,7 @@ class Cli:
                     isinstance(ps_packet, Mpeg2PesPacketType2)
                     and ps_packet.stream_id == 0xBF
                 ):
+                    self.__logger.debug("GOP Index Packet (0xBF) found.")
                     data_stream = BitStream(ps_packet.PES_packet_data)
                     gop_index = GopIndex.read(data_stream)
                     if gop_index is None:

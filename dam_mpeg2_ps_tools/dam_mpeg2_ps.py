@@ -1,5 +1,6 @@
 from bitstring import BitStream
 from decimal import Decimal
+import logging
 from typing import Literal
 
 from .bitstream import copy
@@ -41,6 +42,8 @@ DamMpeg2PsCodec = Literal["aac", "avc", "hevc"]
 
 __GOP_INDEX_HEADER_SIZE = 6
 __GOP_INDEX_ENTRY_SIZE = 12
+
+__logger = logging.getLogger(__name__)
 
 
 def __size_of_gop_index_pes_packet_bytes(gop_index: GopIndex) -> int:
@@ -308,9 +311,9 @@ def write_mpeg2_ps(
         # Add a GOP index entry
         access_unit_size = len(temp_stream) // 8 - access_unit_position
         gops.append(GopIndexEntry(access_unit_position, access_unit_size, SCR_base))
-        # DamMpeg2PsGenerator.__logger.debug(
-        #     f"GOP index entry added. access_unit_position={access_unit_position}, access_unit_size={access_unit_size}, pts={SCR_base}, pts(msec)={SCR_base / 90}"
-        # )
+        __logger.debug(
+            f"GOP index entry added. access_unit_position={access_unit_position} access_unit_size={access_unit_size} pts={SCR_base} pts(msec)={SCR_base / 90}"
+        )
 
     # Write Program End
     write_ps_packet(temp_stream, Mpeg2PsProgramEnd())
@@ -319,9 +322,9 @@ def write_mpeg2_ps(
     presentation_time = picture_count / frame_rate
     SCR_base = int((SYSTEM_CLOCK_FREQUENCY * presentation_time) / 300)
     gops.append(GopIndexEntry(access_unit_position, 0, SCR_base))
-    # DamMpeg2PsGenerator.__logger.debug(
-    #     f"GOP index entry (Program end) added. access_unit_position={access_unit_position}, access_unit_size=0, pts={SCR_base}, pts(msec)={SCR_base / 90}"
-    # )
+    __logger.debug(
+        f"GOP index entry (Program End) added. access_unit_position={access_unit_position} access_unit_size=0 pts={SCR_base} pts(msec)={SCR_base / 90}"
+    )
 
     # Write GOP index
     temp_stream.bytepos = 0

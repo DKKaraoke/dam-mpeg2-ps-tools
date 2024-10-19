@@ -1,7 +1,10 @@
 from bitstring import BitStream
+import logging
 
 # 256 KiB
 __BLOCK_SIZE = 262144
+
+__logger = logging.getLogger(__name__)
 
 
 def copy(source: BitStream, destination: BitStream, length: int | None = None) -> None:
@@ -18,6 +21,7 @@ def copy(source: BitStream, destination: BitStream, length: int | None = None) -
 
     blocks = length // __BLOCK_SIZE
     fraction = length % __BLOCK_SIZE
+    __logger.debug(f"Parameters calculated. blocks={blocks} fraction={fraction}")
     for _ in range(blocks):
         destination.append(source.read(8 * __BLOCK_SIZE))
     destination.append(source.read(8 * fraction))
