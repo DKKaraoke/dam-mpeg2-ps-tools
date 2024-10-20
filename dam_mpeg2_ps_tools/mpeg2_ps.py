@@ -87,7 +87,11 @@ class Mpeg2PesPacketBase(ABC):
 
     @abstractmethod
     def _payload_buffer(self) -> bytes:
-        """Payload Buffer"""
+        """Payload Buffer
+
+        Returns:
+            bytes: Payload Buffer
+        """
 
         pass
 
