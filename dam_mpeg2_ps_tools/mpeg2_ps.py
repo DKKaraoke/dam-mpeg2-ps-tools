@@ -86,25 +86,10 @@ class Mpeg2PesPacketBase(ABC):
         return buffer[3]
 
     @abstractmethod
-    def _write_payload(self, stream: BitStream) -> None:
-        """Write payload
-
-        Args:
-            stream (BitStream): Output stream
-        """
+    def _payload_buffer(self) -> bytes:
+        """Payload Buffer"""
 
         pass
-
-    def payload_to_bytes(self) -> bytes:
-        """Payload to bytes
-
-        Returns:
-            bytes: Payload as bytes
-        """
-
-        stream = BitStream()
-        self._write_payload(stream)
-        return stream.tobytes()
 
     def write(self, stream: BitStream) -> None:
         """Write
@@ -113,7 +98,7 @@ class Mpeg2PesPacketBase(ABC):
             stream (BitStream): Output stream
         """
 
-        payload_buffer = self.payload_to_bytes()
+        payload_buffer = self._payload_buffer()
         stream.append(PACKET_START_CODE)
         stream.append(pack("uint:8", self.stream_id))
         stream.append(pack("uintbe:16", len(payload_buffer)))
@@ -205,7 +190,9 @@ class Mpeg2PesPacketType1(Mpeg2PesPacketBase):
             PES_packet_data,
         )
 
-    def _write_payload(self, stream: BitStream) -> None:
+    def _payload_buffer(self) -> bytes:
+        stream = BitStream()
+
         stream.append(BitArray(bin="10"))
         stream.append(pack("uint:2", self.PES_scrambling_control))
         stream.append(pack("uint:1", self.PES_priority))
@@ -244,6 +231,8 @@ class Mpeg2PesPacketType1(Mpeg2PesPacketBase):
 
         stream.append(self.PES_packet_data)
 
+        return stream.tobytes()
+
 
 @dataclass
 class Mpeg2PesPacketType2(Mpeg2PesPacketBase):
@@ -263,8 +252,10 @@ class Mpeg2PesPacketType2(Mpeg2PesPacketBase):
         stream_id, payload = Mpeg2PesPacketBase._read_common(stream)
         return cls(stream_id, payload)
 
-    def _write_payload(self, stream: BitStream) -> None:
+    def _payload_buffer(self) -> bytes:
+        stream = BitStream()
         stream.append(self.PES_packet_data)
+        return stream.tobytes()
 
 
 @dataclass
@@ -285,9 +276,11 @@ class Mpeg2PesPacketType3(Mpeg2PesPacketBase):
         stream_id, payload = Mpeg2PesPacketBase._read_common(stream)
         return cls(stream_id, len(payload))
 
-    def _write_payload(self, stream: BitStream) -> None:
+    def _payload_buffer(self, stream: BitStream) -> bytes:
+        stream = BitStream()
         for _ in range(self.PES_packet_length):
             stream.append(b"\xff")
+        return stream.tobytes()
 
 
 Mpeg2PesPacket = Union[Mpeg2PesPacketType1, Mpeg2PesPacketType2, Mpeg2PesPacketType3]
