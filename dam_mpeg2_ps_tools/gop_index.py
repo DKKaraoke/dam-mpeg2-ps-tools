@@ -1,9 +1,6 @@
 from bitstring import BitStream, pack
 from dataclasses import dataclass
-from logging import getLogger
 from typing import Self
-
-__logger = getLogger(__name__)
 
 
 @dataclass

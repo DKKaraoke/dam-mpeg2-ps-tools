@@ -1,10 +1,7 @@
 from dataclasses import dataclass
 from io import BytesIO, BufferedReader
 import os
-from logging import getLogger
 from typing import Self
-
-__logger = getLogger(__name__)
 
 
 def seek_nal_unit(

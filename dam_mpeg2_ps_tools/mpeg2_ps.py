@@ -1,14 +1,11 @@
 from abc import ABC, abstractmethod
 from bitstring import BitArray, BitStream, ReadError, pack
 from dataclasses import dataclass
-from logging import getLogger
 from typing import Self, Union
 
 
 SYSTEM_CLOCK_FREQUENCY = 27000000
 PACKET_START_CODE = b"\x00\x00\x01"
-
-__logger = getLogger(__name__)
 
 
 @dataclass
