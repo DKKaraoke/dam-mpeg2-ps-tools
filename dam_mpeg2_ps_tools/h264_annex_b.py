@@ -1,10 +1,10 @@
 from dataclasses import dataclass
 from io import BytesIO, BufferedReader
 import os
-import logging
+from logging import getLogger
 from typing import Self
 
-__logger = logging.getLogger(__name__)
+__logger = getLogger(__name__)
 
 
 def seek_nal_unit(
@@ -23,13 +23,13 @@ def seek_nal_unit(
     zero_count = 0
     while True:
         buffer = stream.read(1)
-        # End of stream
+        # End of Stream
         if len(buffer) == 0:
             break
         current_byte = buffer[0]
         if 2 <= zero_count and current_byte == 0x01:
             buffer = stream.read(1)
-            # End of stream
+            # End of Stream
             if len(buffer) == 0:
                 break
             current_byte = buffer[0]
@@ -256,9 +256,9 @@ class H264NalUnit:
             buffer (bytes): Input buffer
 
         Raises:
-            ValueError: Invalid argument `buffer` length.
-            ValueError: Invalid `header_buffer` length.
-            ValueError: Invalid `forbidden_zero_bit`.
+            ValueError: Invalid argument `buffer`
+            ValueError: Reached to End of Stream
+            ValueError: Invalid `forbidden_zero_bit`
 
         Returns:
             H264NalUnit: NAL Unit
@@ -280,7 +280,7 @@ class H264NalUnit:
         # Read header
         header_buffer = stream.read(1)
         if len(header_buffer) != 1:
-            raise ValueError("Invalid `header_buffer` length.")
+            raise ValueError("Reached to End of Stream.")
         header = header_buffer[0]
         forbidden_zero_bit = header >> 7
         if forbidden_zero_bit != 0x00:

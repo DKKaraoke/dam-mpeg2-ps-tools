@@ -1,10 +1,10 @@
 from bitstring import BitStream
-import logging
+from logging import getLogger
 
 # 256 KiB
 __BLOCK_SIZE = 262144
 
-__logger = logging.getLogger(__name__)
+__logger = getLogger(__name__)
 
 
 def copy(source: BitStream, destination: BitStream, length: int | None = None) -> None:

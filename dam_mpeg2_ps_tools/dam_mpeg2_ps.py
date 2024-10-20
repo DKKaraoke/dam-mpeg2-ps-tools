@@ -1,6 +1,6 @@
 from bitstring import BitStream
 from decimal import Decimal
-import logging
+from logging import getLogger
 from typing import Literal
 
 from .bitstream import copy
@@ -9,19 +9,6 @@ from .gop_index import GopIndexEntry, GopIndex
 from .h264_annex_b import H264NalUnit
 from .mpeg2_ps import (
     SYSTEM_CLOCK_FREQUENCY,
-    seek_packet,
-    read_pes_packet,
-    write_pes_packet,
-    read_ps_pack_header,
-    write_ps_pack_header,
-    read_ps_system_header,
-    write_ps_system_header,
-    read_program_stream_map,
-    write_program_stream_map,
-    read_ps_packet,
-    write_ps_packet,
-)
-from .mpeg2_ps_data import (
     Mpeg2PsProgramEnd,
     Mpeg2PesPacketType1,
     Mpeg2PesPacketType2,
@@ -33,6 +20,8 @@ from .mpeg2_ps_data import (
     Mpeg2HevcVideoDescriptor,
     Mpeg2PsElementaryStreamMapEntry,
     Mpeg2PsProgramStreamMap,
+    seek_packet,
+    read_pes_packet,
 )
 
 
@@ -42,7 +31,7 @@ DamMpeg2PsCodec = Literal["aac", "avc", "hevc"]
 __GOP_INDEX_HEADER_SIZE = 6
 __GOP_INDEX_ENTRY_SIZE = 12
 
-__logger = logging.getLogger(__name__)
+__logger = getLogger(__name__)
 
 
 def __size_of_gop_index_pes_packet_bytes(gop_index: GopIndex) -> int:
@@ -96,8 +85,8 @@ def write_gop_index(
         gop_index (GopIndex): GOP Index
 
     Raises:
-        ValueError: First Program Stream Map not found.
-        ValueError: Inavlid Program Stream Map.
+        ValueError: First Program Stream Map not found
+        ValueError: Inavlid Program Stream Map
     """
 
     start_position = input_stream.bytepos
@@ -106,7 +95,7 @@ def write_gop_index(
     packet_id = seek_packet(input_stream, 0xBC)
     if packet_id is None:
         raise ValueError("First Program Stream Map not found.")
-    program_stream_map = read_program_stream_map(input_stream)
+    program_stream_map = Mpeg2PsProgramStreamMap.read(input_stream)
     if program_stream_map is None:
         raise ValueError("Inavlid Program Stream Map.")
     # Copy container header
@@ -122,7 +111,7 @@ def write_gop_index(
 
     gop_index_buffer = gop_index.to_bytes()
     # Allow 0x000001 (Violation of standards), Do not emulation prevention
-    write_pes_packet(output_stream, Mpeg2PesPacketType2(0xBF, gop_index_buffer))
+    Mpeg2PesPacketType2(0xBF, gop_index_buffer).write(output_stream)
 
     # Copy stream
     copy(input_stream, output_stream)
@@ -136,7 +125,7 @@ def write_container_header(stream: BitStream, codec: DamMpeg2PsCodec) -> None:
         codec (DamMpeg2PsCodec): Codec
 
     Raises:
-        ValueError: Invalid argument `codec`.
+        ValueError: Invalid argument `codec`
     """
 
     if codec == "aac":
@@ -171,22 +160,18 @@ def write_container_header(stream: BitStream, codec: DamMpeg2PsCodec) -> None:
             )
         ]
     else:
-        raise ValueError("Invalid argument `codec`.")
+        raise ValueError("Argument `codec` must be DamMpeg2PsCodec.")
 
-    write_ps_pack_header(stream, Mpeg2PsPackHeader(0, 0, 20000, 0))
-    write_ps_system_header(
-        stream,
-        Mpeg2PsSystemHeader(
-            50000, 0, 0, 0, 0, 1, 1, 1, [Mpeg2PsSystemHeaderPStdInfo(0xE0, 1, 3051)]
-        ),
-    )
-    program_stream_map = Mpeg2PsProgramStreamMap(
+    Mpeg2PsPackHeader(0, 0, 20000, 0).write(stream)
+    Mpeg2PsSystemHeader(
+        50000, 0, 0, 0, 0, 1, 1, 1, [Mpeg2PsSystemHeaderPStdInfo(0xE0, 1, 3051)]
+    ).write(stream)
+    Mpeg2PsProgramStreamMap(
         0x01,
         0x01,
         [],
         [Mpeg2PsElementaryStreamMapEntry(stream_type, 0xE0, elementary_stream_info)],
-    )
-    write_program_stream_map(stream, program_stream_map)
+    ).write(stream)
 
 
 def write_mpeg2_ps(
@@ -249,7 +234,7 @@ def write_mpeg2_ps(
         SCR_base = int((SYSTEM_CLOCK_FREQUENCY * presentation_time) / 300)
         SCR_ext = int((SYSTEM_CLOCK_FREQUENCY * presentation_time) % 300)
         ps_pack_header = Mpeg2PsPackHeader(SCR_base, SCR_ext, 20000, 0)
-        write_ps_pack_header(temp_stream, ps_pack_header)
+        ps_pack_header.write(temp_stream)
 
         for access_unit in sequence:
             presentation_time = picture_count / frame_rate
@@ -301,7 +286,7 @@ def write_mpeg2_ps(
                     dts,
                     pes_packet_data_buffer,
                 )
-                write_pes_packet(temp_stream, pes_packet)
+                pes_packet.write(temp_stream)
                 access_unit_buffer = access_unit_buffer[
                     pes_packet_data_buffer_length_limit:
                 ]
@@ -315,7 +300,7 @@ def write_mpeg2_ps(
         )
 
     # Write Program End
-    write_ps_packet(temp_stream, Mpeg2PsProgramEnd())
+    Mpeg2PsProgramEnd().write(temp_stream)
     # Add GOP index entry of Program end
     access_unit_position = len(temp_stream) // 8
     presentation_time = picture_count / frame_rate

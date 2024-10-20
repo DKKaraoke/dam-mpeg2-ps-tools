@@ -157,8 +157,7 @@ class Cli:
             h264_es = Cli.__load_h264_es(input_file)
             output_stream = BitStream()
             write_mpeg2_ps(h264_es, output_stream, codec, frame_rate)
-            output_stream.bytepos = 0
-            output_file.write(output_stream.read("bytes"))
+            output_file.write(output_stream.tobytes())
 
 
 def main() -> None:
