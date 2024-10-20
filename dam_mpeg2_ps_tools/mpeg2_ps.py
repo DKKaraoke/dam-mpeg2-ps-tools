@@ -122,7 +122,6 @@ class Mpeg2PesPacketBase(ABC):
 
 @dataclass
 class Mpeg2PesPacketType1(Mpeg2PesPacketBase):
-    stream_id: int
     PES_scrambling_control: int
     PES_priority: int
     data_alignment_indicator: int
@@ -248,7 +247,6 @@ class Mpeg2PesPacketType1(Mpeg2PesPacketBase):
 
 @dataclass
 class Mpeg2PesPacketType2(Mpeg2PesPacketBase):
-    stream_id: int
     PES_packet_data: bytes
 
     @classmethod
@@ -271,7 +269,6 @@ class Mpeg2PesPacketType2(Mpeg2PesPacketBase):
 
 @dataclass
 class Mpeg2PesPacketType3(Mpeg2PesPacketBase):
-    stream_id: int
     PES_packet_length: int
 
     @classmethod
