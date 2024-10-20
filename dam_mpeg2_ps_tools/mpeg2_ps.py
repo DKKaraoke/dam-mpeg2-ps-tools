@@ -64,7 +64,7 @@ class Mpeg2PesPacketBase(ABC):
         stream_id: int = stream.read("uint:8")
         PES_packet_length: int = stream.read("uintbe:16")
         payload = stream.read(8 * PES_packet_length)
-        return stream_id, payload
+        return stream_id, payload.tobytes()
 
     @staticmethod
     def peek_stream_id(stream: BitStream) -> int:
