@@ -1052,7 +1052,7 @@ def seek_packet(stream: BitStream, packet_id: int | None = None) -> int | None:
         packet_id (int | None, optional): Packet ID. Defaults to None.
 
     Returns:
-        int | None: int if found Packet ID, else Packet not found
+        int | None: Packet ID (int) if packet found, None if not found
     """
 
     zero_count = 0
@@ -1140,7 +1140,7 @@ def read_ps_packet(stream: BitStream) -> Mpeg2PsPacket | None:
         stream (BitStream): Input stream
 
     Returns:
-        Mpeg2PsPacket | None: Mpeg2PsPacket if found PS Packet, else PS Packet not found
+        Mpeg2PsPacket | None: Mpeg2PsPacket if PS packet found, None if not found
     """
 
     packet_id = seek_packet(stream)
