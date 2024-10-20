@@ -38,8 +38,11 @@ class Mpeg2PsProgramEnd:
         stream.append(PACKET_START_CODE + b"\xb9")
 
 
+@dataclass
 class Mpeg2PesPacketBase(ABC):
     """PES Packet Base Class"""
+
+    stream_id: int
 
     @staticmethod
     def _read_common(stream: BitStream) -> tuple[int, bytes]:
@@ -81,15 +84,6 @@ class Mpeg2PesPacketBase(ABC):
         if buffer[0:3] != PACKET_START_CODE:
             raise ValueError("Invalid `packet_start_code_prefix`.")
         return buffer[3]
-
-    def __init__(self, stream_id: int) -> None:
-        """Constructor
-
-        Args:
-            stream_id (int): Stream ID
-        """
-
-        self.stream_id = stream_id
 
     @abstractmethod
     def _write_payload(self, stream: BitStream) -> None:
