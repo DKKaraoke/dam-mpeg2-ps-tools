@@ -1,18 +1,19 @@
 {
-  "name": "Dev Container",
+  "name": "dam-mpeg2-ps-tools",
   "build": {
     "dockerfile": "Dockerfile"
   },
-  "workspaceFolder": "/home/python/workspace/",
+  "workspaceFolder": "/workspace/",
   "remoteUser": "python",
   "mounts": [
-    "source=${localWorkspaceFolder},target=/home/python/workspace/,type=bind,consistency=cached",
-    "source=${env:HOME}/.ssh/config,target=/home/python/.ssh/config,type=bind,consistency=cached,readonly"
+    "source=${localWorkspaceFolder},target=/workspace/,type=bind,consistency=cached"
   ],
   "onCreateCommand": ".devcontainer/on_create.sh",
   "customizations": {
     "vscode": {
       "extensions": [
+        "ms-azuretools.vscode-docker",
+        "esbenp.prettier-vscode",
         "ms-python.python",
         "ms-python.black-formatter",
         "njpwerner.autodocstring"
