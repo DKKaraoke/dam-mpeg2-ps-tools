@@ -4,10 +4,10 @@ import fire
 from io import BufferedReader
 import logging
 
-from .dam_mpeg2_ps import write_mpeg2_ps
-from .gop_index import GopIndex
-from .h264_annex_b import H264NalUnit, index_nal_unit
-from .mpeg2_ps import read_ps_packet, Mpeg2PesPacketType2
+from dam_mpeg2_ps_tools.dam_mpeg2_ps import write_mpeg2_ps
+from dam_mpeg2_ps_tools.gop_index import GopIndex
+from dam_mpeg2_ps_tools.h264_annex_b import H264NalUnit, index_nal_unit
+from dam_mpeg2_ps_tools.mpeg2_ps import read_ps_packet, Mpeg2PesPacketType2
 
 
 class Cli:

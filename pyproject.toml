@@ -5,10 +5,13 @@ description = "DAM MPEG2-PS Tools"
 authors = ["soltia48 <soltia48@protonmail.com>"]
 license = "MIT"
 readme = "README.md"
-packages = [{include = "dam_mpeg2_ps_tools"}]
+packages = [
+    {include = "dam_mpeg2_ps_tools"},
+    {include = "dam_mpeg2_ps_tools_cli"}
+]
 
 [tool.poetry.scripts]
-dam-mpeg2-ps-tools = "dam_mpeg2_ps_tools.cli:main"
+dam-mpeg2-ps-tools = "dam_mpeg2_ps_tools_cli.cli:main"
 
 [tool.poetry.dependencies]
 python = "^3.11"
