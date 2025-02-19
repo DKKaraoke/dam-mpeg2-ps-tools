@@ -81,4 +81,4 @@ NOTES
 
 [MIT](https://opensource.org/licenses/MIT)
 
-Copyright (c) 2023 soltia48
+Copyright (c) 2023-2025 soltia48
